@@ -137,16 +137,16 @@ class Beam:
         """
         self.rct.move_ip(self.vx, self.vy)
         screen.blit(self.img, self.rct)
-    class Explosion:
+    class Explosion:#追加機能１
         def __init__(self, bomb: pg.Surface):
-            bakuhatu_img = pg.image.load("ex03/fig/explosion.gif")
+            bakuhatu_img = pg.image.load("ex03/fig/explosion.gif")#爆発の画像
             self.bakuhatu_imgs = [
-                bakuhatu_img,
-                pg.transform.flip(bakuhatu_img, True, False),
-                pg.transform.flip(bakuhatu_img, False, True),
-                pg.transform.flip(bakuhatu_img, True, True)
+                bakuhatu_img,#爆発の画像
+                pg.transform.flip(bakuhatu_img, True, False),#爆発の画像２
+                pg.transform.flip(bakuhatu_img, False, True),#爆発の画像３
+                pg.transform.flip(bakuhatu_img, True, True)#爆発の画像４
             ]
-            self.life = 20
+            self.life = 20 #リストで表示するときに使う変数
         
         def update(self, screen: pg.Surface):
             if self._life >= 0:
@@ -157,8 +157,11 @@ class Beam:
 
 def main():
     pg.display.set_caption("たたかえ！こうかとん")
+    score=0
     screen = pg.display.set_mode((WIDTH, HEIGHT))    
     bg_img = pg.image.load("ex03/fig/pg_bg.jpg")
+    fonto = pg.font.Font(None, 80)
+
     bird = Bird(3, (900, 400))
     # bomb = Bomb((255, 0, 0), 10)
     bombs = [Bomb((255, 0, 0), 10) for _ in range(NUM_OF_BOMBS)]
@@ -166,6 +169,8 @@ def main():
 
     clock = pg.time.Clock()
     tmr = 0
+    txt = fonto.render("Score : " + str(score), True, (0, 0, 0))
+    screen.blit(txt, [100, 100])
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -196,9 +201,9 @@ def main():
         key_lst = pg.key.get_pressed()
         bird.update(key_lst, screen)
         bombs = [bomb for bomb in bombs if bomb is not None]
-        for bomb in bombs:
+        for i, bomb in enumerate(bombs):
             bomb.update(screen)
-        if beam is not None:
+        
             beam.update(screen)
         pg.display.update()
         tmr += 1
