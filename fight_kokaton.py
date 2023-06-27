@@ -1,7 +1,6 @@
 import random
 import sys
 import time
-
 import pygame as pg
 
 
@@ -138,6 +137,22 @@ class Beam:
         """
         self.rct.move_ip(self.vx, self.vy)
         screen.blit(self.img, self.rct)
+    class Explosion:
+        def __init__(self, bomb: pg.Surface):
+            bakuhatu_img = pg.image.load("ex03/fig/explosion.gif")
+            self.bakuhatu_imgs = [
+                bakuhatu_img,
+                pg.transform.flip(bakuhatu_img, True, False),
+                pg.transform.flip(bakuhatu_img, False, True),
+                pg.transform.flip(bakuhatu_img, True, True)
+            ]
+            self.life = 20
+        
+        def update(self, screen: pg.Surface):
+            if self._life >= 0:
+                screen.blit(self.bakuhatu_imgs[self.life%4], screen)
+                self.life -= 1
+
 
 
 def main():
@@ -174,7 +189,9 @@ def main():
                     bombs[i] = None
                     beam = None
                     bird.change_img(6, screen)
-                    pg.display.update()              
+
+                    pg.display.update()  
+                    
 
         key_lst = pg.key.get_pressed()
         bird.update(key_lst, screen)
